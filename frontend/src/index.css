@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* 
+*{
+  background-color: white;
+  color: black;
+} */
+
+html{
+  background-color: white;
+  
+}
+.App{
+  background-color: white;
+}
+body{
+  left: 10vh;
+}
+
+/* Add this to your CSS file */
+.nlink {
+  color: #4a4a4a; /* Default color */
+  transition: color 0.3s ease; /* Smooth transition for color change */
+}
+
+.nlink:hover {
+  color: #ffffff; /* Change color on hover */
+}
+.anim2{
+  opacity: 999 !important;
+}
+/* #anime img{
+  opacity: 1 !important;
+} */
+@layer utilities {
+  .text-outline {
+    @apply text-transparent;
+    -webkit-text-stroke: 1px black;
+  }
+}
