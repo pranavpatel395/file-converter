@@ -1,5 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+const User = require('../models/User'); // Adjust the path as needed
+const bcrypt = require('bcrypt'); // Use bcrypt for password hashing
 const multer = require('multer');
 const path = require('path');
 const pdfController = require('../controllers/pdfControllers');
@@ -11,6 +13,9 @@ const excelToPdfController = require('../controllers/excelToPdf');
 const mergePdfController = require('../controllers/mergePdf');
 const { convertPdfToPptx } = require('../controllers/pdftopptx');
 const { processImage } = require('../controllers/Imagetodocx');
+const authController = require('../controllers/authController');
+
+
 
 const router = express.Router();
 
@@ -29,6 +34,14 @@ const upload = multer({
     storage: storage,
     limits: { fileSize: parseInt(process.env.MAX_FILE_SIZE, 10) * 1024 * 1024 } // 100 MB
 });
+
+router.post('/register', authController.register); 
+
+
+
+// Login route
+router.post('/login', authController.login);
+
 
 // Image to PDF route
 router.post('/img_to_pdf', upload.array('images', 100), pdfController.createPdf);

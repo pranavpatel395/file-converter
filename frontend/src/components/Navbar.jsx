@@ -32,7 +32,7 @@ const Navbar = () => {
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               <Link
-                to="/"
+                to="/home"
                 className="text-gray-500 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium"
               >
                 Home
@@ -95,13 +95,13 @@ const Navbar = () => {
           </div>
           <div className="flex items-center">
             <Link
-              to="#"
+              to="/signup"
               className="text-gray-500 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium"
             >
               Sign up
             </Link>
             <Link
-              to="#"
+              to="/login"
               className="ml-4 text-white bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-md text-sm font-medium"
             >
               Log in
@@ -194,14 +194,14 @@ const Navbar = () => {
           <div className="pt-4 pb-3 border-t border-gray-200">
             <div className="flex items-center px-4">
               <Link
-                to="#"
+                to="/signup"
                 onClick={handleMobileMenuClick}
                 className="text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 transition block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium"
               >
                 Sign up
               </Link>
               <Link
-                to="#"
+                to="/login"
                 onClick={handleMobileMenuClick}
                 className="ml-4 text-white bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-md text-base font-medium"
               >

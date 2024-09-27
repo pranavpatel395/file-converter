@@ -15,6 +15,8 @@ import Exceltopdf from './components/subComponents/Xltopdf.jsx'
 import Ppttopdf from './components/subComponents/ppt_to_pdf.jsx'
 import PdfToPptx from './components/subComponents/pdfToPptx.jsx'
 import Imgtodocx from './components/subComponents/Imgtodocx.jsx'
+import Login from './components/Login.jsx'
+import Register from './components/Register.jsx';
 
 
 
@@ -24,7 +26,7 @@ const App = () => {
       <div className="App">
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home/>}/>
+          <Route path="/home" element={<Home/>}/>
           <Route path="/File" element={<FileConverter />} />
           <Route path='ContactPage' element={<ContactPage/>}/>
           <Route path='/Edit' element={<Edit/>}/>
@@ -38,6 +40,9 @@ const App = () => {
           <Route path='/Xltopdf' element={<Exceltopdf/>}/>
           <Route path='/pdftopptx' element={<PdfToPptx/>}/>
           <Route path='/Imgtodocx' element={<Imgtodocx/>}/>
+
+          <Route path='/login' element={<Login/>}/>
+          <Route path='/signup' element={<Register/>}/>
         </Routes>
         
       </div>

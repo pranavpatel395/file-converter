@@ -28,6 +28,7 @@ const features = [
 ];
 
 const Home = () => {
+  
   useEffect(() => {
     const isDesktop = window.innerWidth > 768; // Only animate on desktop
 
