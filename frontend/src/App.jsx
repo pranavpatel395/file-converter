@@ -14,6 +14,7 @@ import DocxToPdf from './components/subComponents/DocxToPdf.jsx'
 import Exceltopdf from './components/subComponents/Xltopdf.jsx'
 import Ppttopdf from './components/subComponents/ppt_to_pdf.jsx'
 import PdfToPptx from './components/subComponents/pdfToPptx.jsx'
+import Imgtodocx from './components/subComponents/Imgtodocx.jsx'
 
 
 
@@ -36,6 +37,7 @@ const App = () => {
           <Route path='/DocxToPdf' element={<DocxToPdf/>}/>
           <Route path='/Xltopdf' element={<Exceltopdf/>}/>
           <Route path='/pdftopptx' element={<PdfToPptx/>}/>
+          <Route path='/Imgtodocx' element={<Imgtodocx/>}/>
         </Routes>
         
       </div>

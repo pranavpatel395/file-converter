@@ -72,8 +72,8 @@ const Navbar = () => {
                       <Link to="/pdftopptx" className="text-gray-700 hover:text-gray-900 block text-sm">
                         PDF To PPT
                       </Link>
-                      <Link to="#" className="text-gray-700 hover:text-gray-900 block text-sm">
-                        PDF To Excel
+                      <Link to="/Imgtodocx" className="text-gray-700 hover:text-gray-900 block text-sm">
+                        IMG To Docx
                       </Link>
                     </div>
                   </div>
@@ -163,8 +163,8 @@ const Navbar = () => {
                   <Link to="/pdftopptx" onClick={handleMobileMenuClick} className="block text-gray-700 hover:text-gray-900 text-sm">
                     PDF To PPT
                   </Link>
-                  <Link to="#" onClick={handleMobileMenuClick} className="block text-gray-700 hover:text-gray-900 text-sm">
-                    PDF To Excel
+                  <Link to="/Imgtodocx" onClick={handleMobileMenuClick} className="block text-gray-700 hover:text-gray-900 text-sm">
+                    IMG TO DOCX
                   </Link>
                 </div>
               )}

@@ -10,6 +10,7 @@ const Docxtopdf = require('../controllers/Docxtopdf');
 const excelToPdfController = require('../controllers/excelToPdf');
 const mergePdfController = require('../controllers/mergePdf');
 const { convertPdfToPptx } = require('../controllers/pdftopptx');
+const { processImage } = require('../controllers/Imagetodocx');
 
 const router = express.Router();
 
@@ -60,5 +61,7 @@ router.post('/mergePdf', upload.array('pdfs', 2), mergePdfController.mergePdfs);
 
 // PDF to PPTX route
 router.post('/convert-pdf-to-ppt', upload.single('pdfFile'), convertPdfToPptx);
+
+router.post('/imgtodocx', upload.single('image'), processImage);
 
 module.exports = router;

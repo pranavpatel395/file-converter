@@ -1,8 +1,7 @@
-// src/App.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
-function mergePdf() {
+function MergePdf() {
   const [fileInputs, setFileInputs] = useState([{ id: 1, file: null }]);
 
   // Handle file input changes
@@ -52,29 +51,62 @@ function mergePdf() {
   };
 
   return (
-    <div>
-      <h1>Merge PDF Files</h1>
-      {fileInputs.map((input, index) => (
-        <div key={input.id} style={{ marginBottom: '10px' }}>
-          <input
-            type="file"
-            onChange={(e) => handleFileChange(index, e)}
-            accept=".pdf"
-          />
-          {fileInputs.length > 1 && (
-            <button type="button" onClick={() => removeFileInput(index)}>
-              Remove
-            </button>
-          )}
-        </div>
-      ))}
-      <button type="button" onClick={addFileInput}>
-        Add Another File
-      </button>
-      <br />
-      <button onClick={handleMerge}>Merge PDFs</button>
-    </div>
+    <>
+      <div className="max-w-xl mx-auto p-6 bg-white shadow-md rounded-md mt-10">
+        <h1 className="text-2xl font-bold mb-4 text-center">Merge PDF Files</h1>
+
+        {fileInputs.map((input, index) => (
+          <div key={input.id} className="flex items-center mb-4">
+            <input
+              type="file"
+              onChange={(e) => handleFileChange(index, e)}
+              accept=".pdf"
+              className="border border-gray-300 p-2 rounded-md w-full"
+            />
+            {fileInputs.length > 1 && (
+              <button
+                type="button"
+                onClick={() => removeFileInput(index)}
+                className="ml-2 text-red-500 font-semibold hover:underline"
+              >
+                Remove
+              </button>
+            )}
+          </div>
+        ))}
+
+        <button
+          type="button"
+          onClick={addFileInput}
+          className="w-full bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600"
+        >
+          Add Another File
+        </button>
+
+        <br />
+
+        <button
+          onClick={handleMerge}
+          className="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 mt-4"
+        >
+          Merge PDFs
+        </button>
+      </div>
+
+      {/* Text section below the upload form */}
+      <div className="max-w-3xl mx-auto mt-8 text-center text-gray-600">
+        <h2 className="text-xl font-semibold mb-4">What is PDF Merging?</h2>
+        <p className="mb-4">
+          PDF merging allows you to combine multiple PDF files into a single document, which can make it easier to organize
+          and share your content. Whether you're merging reports, invoices, or images, this tool simplifies the process.
+        </p>
+        <p className="mb-4">
+          Just upload your files, click "Merge PDFs," and your new merged PDF will be ready for download within moments.
+          This tool supports multiple PDF files and ensures a quick and secure conversion process.
+        </p>
+      </div>
+    </>
   );
 }
 
-export default mergePdf;
+export default MergePdf;
