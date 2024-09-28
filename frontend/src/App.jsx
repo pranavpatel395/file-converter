@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import FileConverter from './components/File';
 import Navbar from './components/Navbar';
 import Home from './components/Home.jsx';
@@ -26,9 +26,10 @@ const App = () => {
       <div className="App">
         <Navbar />
         <Routes>
+        <Route path="/" element={<Home/>}/>
           <Route path="/home" element={<Home/>}/>
           <Route path="/File" element={<FileConverter />} />
-          <Route path='ContactPage' element={<ContactPage/>}/>
+          <Route path='/ContactPage' element={<ContactPage/>}/>
           <Route path='/Edit' element={<Edit/>}/>
           <Route path='/Sign' element={<Sign/>}/>
           <Route path='/mergePdf' element={<Merge/>}/>
