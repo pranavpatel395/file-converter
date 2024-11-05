@@ -11,4 +11,7 @@ export default defineConfig({
       },
     },
   },
+  resolve: {
+    extensions: ['.js', '.jsx'], // Ensure .jsx is included
+  },
 });

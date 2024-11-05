@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 
 const Login = () => {
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   });
-  const navigate = useNavigate(); // useNavigate hook for redirection
+  const [errorMessage, setErrorMessage] = useState('');
+  const { login } = useAuth(); // Use login function from AuthContext
+  const navigate = useNavigate();
+  const location = useLocation(); // To capture intended route if redirected
 
   const handleChange = (e) => {
     setFormData({
@@ -20,20 +24,25 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/api/login', formData);
-
+  
       // Assuming the response contains a token
       const { token } = response.data;
-
-      // Save the token in localStorage (or cookies)
-      localStorage.setItem('token', token);
-
-      // Redirect to the Home page on success
-      navigate('/home'); // No need for window.location.reload()
+  
+      // Call login from AuthContext to save the token and set auth state
+      login(token);
+  
+      // Redirect to the intended route or home page on success
+      const redirectPath = location.state?.from?.pathname || '/';
+      navigate(redirectPath);
+  
+      // Force a page reload after navigating to apply the auth state changes
+      window.location.reload();  // This will reload the current page
     } catch (error) {
+      setErrorMessage('Invalid credentials. Please try again.');
       console.error('Error logging in', error);
-      alert('Invalid credentials.');
     }
   };
+  
 
   return (
     <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50">
@@ -79,6 +88,12 @@ const Login = () => {
                 />
               </div>
             </div>
+
+            {errorMessage && (
+              <div className="text-red-500 text-sm">
+                {errorMessage}
+              </div>
+            )}
 
             <div>
               <button

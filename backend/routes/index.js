@@ -4,6 +4,8 @@ const User = require('../models/User'); // Adjust the path as needed
 const bcrypt = require('bcrypt'); // Use bcrypt for password hashing
 const multer = require('multer');
 const path = require('path');
+const jwt = require('jsonwebtoken'); // JWT for secure token-based authentication
+const rateLimit = require('express-rate-limit'); // For rate limiting to prevent brute-force attacks
 const pdfController = require('../controllers/pdfControllers');
 const pptController = require('../controllers/pptController');
 const pdfToImageController = require('../controllers/pdfToImageController');
@@ -14,8 +16,6 @@ const mergePdfController = require('../controllers/mergePdf');
 const { convertPdfToPptx } = require('../controllers/pdftopptx');
 const { processImage } = require('../controllers/Imagetodocx');
 const authController = require('../controllers/authController');
-
-
 
 const router = express.Router();
 
@@ -35,22 +35,48 @@ const upload = multer({
     limits: { fileSize: parseInt(process.env.MAX_FILE_SIZE, 10) * 1024 * 1024 } // 100 MB
 });
 
-router.post('/register', authController.register); 
+// Rate limiter to prevent brute-force attacks
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: "Too many requests from this IP, please try again after 15 minutes"
+});
+router.use(limiter);
+
+// Middleware for checking JWT token
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; // Extract the token from the "Authorization" header
+    
+    if (!token) {
+        return res.status(401).json({ message: 'Access denied. No token provided.' });
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({ message: 'Invalid token. Access forbidden.' });
+        }
+        req.user = user; // Add user info to the request for authorization checks, if needed
+        next(); // Move to the next middleware or route handler
+    });
+};
 
 
+// Route protection
+const requireAuth = (req, res, next) => {
+    authenticateToken(req, res, next);
+};
 
-// Login route
+// Register and login routes
+router.post('/register', authController.register);
 router.post('/login', authController.login);
 
+// Secure file upload routes with authentication and input validation
+router.post('/img_to_pdf', requireAuth, upload.array('images', 100), pdfController.createPdf);
+router.post('/ppttopdf', requireAuth, upload.single('pptFile'), pptController.convertFile);
 
-// Image to PDF route
-router.post('/img_to_pdf', upload.array('images', 100), pdfController.createPdf);
-
-// PPT to PDF route
-router.post('/ppttopdf', upload.single('pptFile'), pptController.convertFile);
-
-// PDF to images route
-router.post('/pdf_to_images', (req, res, next) => {
+// PDF to images route with authentication and error handling
+router.post('/pdf_to_images', requireAuth, (req, res, next) => {
     const pdfUpload = upload.single('pdf');
     pdfUpload(req, res, (err) => {
         if (err) {
@@ -60,21 +86,13 @@ router.post('/pdf_to_images', (req, res, next) => {
     });
 }, pdfToImageController.convertPdfToImages);
 
-// PDF to DOCX route
-router.post('/upload', upload.single('pdf'), pdfToDocxController.pdfToDocx);
-
-// Docx to PDF route
-router.post('/docx_to_pdf', upload.single('docx'), Docxtopdf.docxToPdf);
-
-router.post('/convert', upload.single('file'), excelToPdfController.convertWithLibre);
-router.post('/convert-pspdfkit', upload.single('file'), excelToPdfController.convertWithPspdfkit);
-
-// Merge PDFs route
-router.post('/mergePdf', upload.array('pdfs', 2), mergePdfController.mergePdfs);
-
-// PDF to PPTX route
-router.post('/convert-pdf-to-ppt', upload.single('pdfFile'), convertPdfToPptx);
-
-router.post('/imgtodocx', upload.single('image'), processImage);
+// Secure other file conversion routes with authentication
+router.post('/upload', requireAuth, upload.single('pdf'), pdfToDocxController.pdfToDocx);
+router.post('/docx_to_pdf', requireAuth, upload.single('docx'), Docxtopdf.docxToPdf);
+router.post('/convert', requireAuth, upload.single('file'), excelToPdfController.convertWithLibre);
+router.post('/convert-pspdfkit', requireAuth, upload.single('file'), excelToPdfController.convertWithPspdfkit);
+router.post('/mergePdf', requireAuth, upload.array('pdfs', 2), mergePdfController.mergePdfs);
+router.post('/convert-pdf-to-ppt', requireAuth, upload.single('pdfFile'), convertPdfToPptx);
+router.post('/imgtodocx', requireAuth, upload.single('image'), processImage);
 
 module.exports = router;

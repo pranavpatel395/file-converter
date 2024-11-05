@@ -1,16 +1,8 @@
-import React, { useEffect } from 'react';
-import LocomotiveScroll from 'locomotive-scroll';
-import 'locomotive-scroll/dist/locomotive-scroll.css';
+import React, { useEffect, useState } from 'react';
 import LineAnimation from './LineAnimation';
 import img from '../assets/FileCov.png';
 import img1 from '../assets/FileCov2.png';
 import img2 from '../assets/FileCov3.png';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-
-// Register the ScrollTrigger plugin with GSAP
-gsap.registerPlugin(ScrollTrigger);
 
 const features = [
   {
@@ -27,70 +19,21 @@ const features = [
   },
 ];
 
-const Home = () => {
-  
+const Home = ({ refresh }) => {
+  const [content, setContent] = useState('Loading content...');
+
   useEffect(() => {
-    const isDesktop = window.innerWidth > 768; // Only animate on desktop
+    const fetchContent = async () => {
+      console.log('Fetching Home content...');
+      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API fetch delay
+      setContent('Home page content refreshed!');
+    };
 
-    if (isDesktop) {
-      // Initialize Locomotive Scroll for smooth scrolling
-      const scroll = new LocomotiveScroll({
-        el: document.querySelector('#main-container'),
-        smooth: true,
-      });
-
-      // Locomotive Scroll update with GSAP's ScrollTrigger
-      ScrollTrigger.scrollerProxy('#main-container', {
-        scrollTop(value) {
-          return arguments.length
-            ? scroll.scrollTo(value, 0, 0)
-            : scroll.scroll.instance.scroll.y;
-        },
-        getBoundingClientRect() {
-          return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
-        },
-        pinType: document.querySelector('#main-container').style.transform
-          ? 'transform'
-          : 'fixed',
-      });
-
-      // GSAP ScrollTrigger setup for background color transitions
-      const sections = document.querySelectorAll('.color-section');
-      const colors = ['#ffffff', '#f8f9fa', '#e9ecef', '#dee2e6', '#ced4da']; // Example colors
-
-      sections.forEach((section, index) => {
-        gsap.to('body', {
-          backgroundColor: colors[index % colors.length], // Change to a different color for each section
-          ease: 'power1.inOut',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top center',
-            end: 'bottom center',
-            scrub: true,
-            scroller: '#main-container', // Locomotive Scroll container
-            onEnter: () => {
-              gsap.to(section, { opacity: 1, duration: 1 });
-            },
-            onLeaveBack: () => {
-              gsap.to(section, { opacity: 0.5, duration: 1 });
-            },
-          },
-        });
-      });
-
-      // Refresh ScrollTrigger and Locomotive Scroll after setup
-      ScrollTrigger.addEventListener('refresh', () => scroll.update());
-      ScrollTrigger.refresh();
-
-      // Cleanup on unmount
-      return () => {
-        if (scroll) scroll.destroy();
-      };
-    }
-  }, []);
+    fetchContent();
+  }, [refresh]); // Re-run useEffect when "refresh" state changes
 
   return (
-    <div id="main-container" data-scroll-container className="bg-white px-4 sm:px-6 lg:px-8">
+    <div id="main-container" className="bg-white px-4 sm:px-6 lg:px-8">
       {/* Main Section */}
       <div className="color-section flex flex-col lg:flex-row justify-center items-center lg:space-x-8">
         <div className="lg:w-1/2 text-center lg:text-left">
@@ -129,9 +72,9 @@ const Home = () => {
         ))}
       </div>
 
-      {/* Animations (Desktop Only) */}
+      {/* Static Content (No Animations) */}
       <div className="color-section flex flex-col lg:flex-row justify-center items-center lg:space-x-16 mt-24 lg:mt-36">
-        <div id="anime" className="anim2 mb-8 lg:mb-0">
+        <div id="anime" className="mb-8 lg:mb-0">
           <img src={img1} alt="Editing PDF" className="w-full max-w-xs sm:max-w-sm lg:max-w-lg" />
         </div>
         <div className="text-center lg:text-left">
@@ -149,7 +92,7 @@ const Home = () => {
             Highlight, add text, and annotations to PDFs. You can also connect to 20 other tools to enhance your files further.
           </p>
         </div>
-        <div id="anime" className="anim2">
+        <div id="anime">
           <img src={img2} alt="Editing PDF" className="w-full max-w-xs sm:max-w-sm lg:max-w-lg" />
         </div>
       </div>

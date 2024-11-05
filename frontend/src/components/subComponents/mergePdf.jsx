@@ -3,6 +3,7 @@ import axios from 'axios';
 
 function MergePdf() {
   const [fileInputs, setFileInputs] = useState([{ id: 1, file: null }]);
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Handle file input changes
   const handleFileChange = (index, e) => {
@@ -25,17 +26,25 @@ function MergePdf() {
   // Handle merging PDFs
   const handleMerge = async () => {
     const formData = new FormData();
-    fileInputs.forEach((input, index) => {
+    fileInputs.forEach((input) => {
       if (input.file) {
         formData.append('pdfs', input.file);
       }
     });
 
     try {
+      // Retrieve token from localStorage (assuming it's saved there upon login)
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setErrorMessage('You must be logged in to merge PDFs.');
+        return;
+      }
+
       const response = await axios.post('http://localhost:5000/api/mergePdf', formData, {
         responseType: 'blob',
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`, // Attach the token for secure access
         },
       });
 
@@ -46,6 +55,7 @@ function MergePdf() {
       document.body.appendChild(link);
       link.click();
     } catch (error) {
+      setErrorMessage('There was an error merging the PDFs. Please ensure you are logged in and try again.');
       console.error('There was an error merging the PDFs!', error);
     }
   };
@@ -91,6 +101,9 @@ function MergePdf() {
         >
           Merge PDFs
         </button>
+
+        {/* Display error message if there's an issue */}
+        {errorMessage && <p className="text-red-500 mt-4">{errorMessage}</p>}
       </div>
 
       {/* Text section below the upload form */}
