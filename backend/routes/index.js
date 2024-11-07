@@ -91,7 +91,7 @@ router.post('/pdf_to_images', requireAuth, (req, res, next) => {
 // Secure other file conversion routes with authentication
 router.post('/upload', requireAuth, upload.single('pdf'), pdfToDocxController.pdfToDocx);
 router.post('/docx_to_pdf', requireAuth, upload.single('docx'), Docxtopdf.docxToPdf);
-router.post('/convert', requireAuth, upload.single('file'), excelToPdfController.convertWithLibre);
+router.post('/Xltopdf', requireAuth, upload.single('file'), excelToPdfController.convertWithLibre);
 router.post('/convert-pspdfkit', requireAuth, upload.single('file'), excelToPdfController.convertWithPspdfkit);
 router.post('/mergePdf', requireAuth, upload.array('pdfs', 2), mergePdfController.mergePdfs, (req, res) => {
     // Handle successful response

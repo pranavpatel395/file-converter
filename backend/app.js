@@ -18,10 +18,12 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // Configure CORS to allow Authorization headers
 app.use(cors({
-    origin: 'http://localhost:5173', // Update this to the URL of your frontend
+    origin: 'http://localhost:5173', 
     methods: 'GET,POST',
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true 
 }));
+
 
 app.use(express.json());
 console.log(path.join(__dirname, 'uploads'));

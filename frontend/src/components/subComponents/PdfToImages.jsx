@@ -1,11 +1,18 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 
 function PdfToImages() {
     const [pdfFile, setPdfFile] = useState(null);
     const [imageUrls, setImageUrls] = useState([]);
-    const [loading, setLoading] = useState(false); // Loading state
+    const [loading, setLoading] = useState(false);
     const fileInputRef = useRef(null);
+
+    useEffect(() => {
+        // Reset images when pdfFile changes
+        if (!pdfFile) {
+            setImageUrls([]);
+        }
+    }, [pdfFile]);
 
     const handleFileChange = (e) => {
         setPdfFile(e.target.files[0]);
@@ -14,16 +21,30 @@ function PdfToImages() {
     const handleUpload = async () => {
         if (!pdfFile) return;
 
-        setLoading(true); // Start loading when uploading begins
+        setLoading(true);
         try {
             const formData = new FormData();
             formData.append('pdf', pdfFile);
 
-            const response = await axios.post('http://localhost:5000/api/pdf_to_images', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
+            // Retrieve the token
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('No token found. Please log in.');
+                setLoading(false);
+                return;
+            }
+
+            const response = await axios.post(
+                'http://localhost:5000/api/pdf_to_images',
+                formData,
+                {
+                    headers: { 
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    withCredentials: true
                 }
-            });
+            );
 
             if (response.data.images) {
                 setImageUrls(response.data.images.map(image => `http://localhost:5000/${image}`));
@@ -35,12 +56,12 @@ function PdfToImages() {
             console.error('Error during file upload and conversion:', error.message);
             alert('An error occurred while converting the PDF to images. Please try again.');
         } finally {
-            setLoading(false); // Stop loading when the process completes
+            setLoading(false);
         }
     };
 
     const handleDownloadAll = async () => {
-        setLoading(true); // Start loading during download
+        setLoading(true);
         for (const [index, url] of imageUrls.entries()) {
             const response = await fetch(url);
             const blob = await response.blob();
@@ -52,13 +73,15 @@ function PdfToImages() {
             document.body.removeChild(link);
         }
 
-        setLoading(false); // Stop loading after download completes
-        handleClear(); // Clear the inputs
+        setLoading(false);
+        handleClear();
     };
 
     const handleClear = () => {
         setPdfFile(null);
         setImageUrls([]);
+        
+        // Clear the input file reference and reset file input
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }
@@ -74,7 +97,7 @@ function PdfToImages() {
                     onChange={handleFileChange}
                     ref={fileInputRef}
                     className="mb-4 border border-gray-300 p-2 rounded-md w-full"
-                    disabled={loading} // Disable input while loading
+                    disabled={loading} 
                 />
                 <button
                     onClick={handleUpload}
@@ -118,30 +141,14 @@ function PdfToImages() {
                         >
                             Download All Images
                         </button>
-                        <button
+                        {/* <button
                             onClick={handleClear}
                             className="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
                         >
                             Clear
-                        </button>
+                        </button> */}
                     </div>
                 )}
-            </div>
-
-            {/* Informational Section (Moved below the button section) */}
-            <div className="max-w-4xl mx-auto mt-10 p-5 bg-gray-100 rounded-lg shadow-md">
-                <h2 className="text-xl font-semibold mb-4 text-gray-800">Why Use Our PDF to Images Converter?</h2>
-                <p className="text-gray-600 mb-6">
-                    Convert your PDF files into high-quality images. Simply upload your PDF, and you will receive individual images for each page.
-                </p>
-                <p className="mb-4 text-gray-700">
-                    This tool allows you to quickly convert your PDF files into individual images, making it easy to extract and use each page as needed. Whether you're looking to share pages online, include them in presentations, or simply store them as images, this converter has you covered.
-                </p>
-                <ul className="list-disc pl-5 text-gray-700">
-                    <li className="mb-2">Fast and reliable conversion process.</li>
-                    <li className="mb-2">Download all images with a single click.</li>
-                    <li>Completely free to use, with no limitations on file size.</li>
-                </ul>
             </div>
         </>
     );

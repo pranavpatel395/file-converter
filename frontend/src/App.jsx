@@ -59,7 +59,7 @@ const App = () => {
               }
             />
             <Route
-              path="/PdfToImages"
+              path="/pdf_to_images"
               element={
                 <ProtectedRoute>
                   <PdftoImg />
@@ -75,7 +75,7 @@ const App = () => {
               }
             />
             <Route
-              path="/DocxToPdf"
+              path="/docx_to_pdf"
               element={
                 <ProtectedRoute>
                   <DocxToPdf />
@@ -91,7 +91,7 @@ const App = () => {
               }
             />
             <Route
-              path="/ppt_to_pdf"
+              path="/ppttopdf"
               element={
                 <ProtectedRoute>
                   <Ppttopdf />
@@ -99,7 +99,7 @@ const App = () => {
               }
             />
             <Route
-              path="/pdftopptx"
+              path="/convert-pdf-to-ppt"
               element={
                 <ProtectedRoute>
                   <PdfToPptx />
@@ -107,7 +107,7 @@ const App = () => {
               }
             />
             <Route
-              path="/Imgtodocx"
+              path="/imgtodocx"
               element={
                 <ProtectedRoute>
                   <Imgtodocx />

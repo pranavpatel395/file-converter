@@ -5,23 +5,17 @@ import { useNavigate } from 'react-router-dom';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
   const navigate = useNavigate();
 
-  // Check if the user is logged in by looking for a token
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsAuthenticated(!!token);
-  }, []);
-
-  // Log in function to store token
+  // Log in function to store token and update auth state
   const login = (token) => {
     localStorage.setItem('token', token);
     setIsAuthenticated(true);
     navigate('/'); // Redirect to home or protected route after login
   };
 
-  // Log out function
+  // Log out function to clear token and reset auth state
   const logout = () => {
     localStorage.removeItem('token');
     setIsAuthenticated(false);
