@@ -21,9 +21,21 @@ function Pdftodocx() {
         formData.append('pdf', file);
 
         setLoading(true); // Start loading when file upload begins
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            setError('No token found. Please log in.');
+            setLoading(false);
+            return;
+        }
+        
+
 
         try {
             const response = await axios.post('/api/upload', formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+                },
                 responseType: 'blob', // Important for downloading the file
             });
 

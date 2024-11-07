@@ -23,42 +23,44 @@ function MergePdf() {
     setFileInputs(newFileInputs);
   };
 
-  // Handle merging PDFs
   const handleMerge = async () => {
     const formData = new FormData();
     fileInputs.forEach((input) => {
-      if (input.file) {
-        formData.append('pdfs', input.file);
-      }
+        if (input.file) {
+            formData.append('pdfs', input.file);
+        }
     });
 
     try {
-      // Retrieve token from localStorage (assuming it's saved there upon login)
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setErrorMessage('You must be logged in to merge PDFs.');
-        return;
-      }
+        const token = localStorage.getItem('token');
+        console.log('Sending token:', token);  // Log token for verification
 
-      const response = await axios.post('http://localhost:5000/api/mergePdf', formData, {
-        responseType: 'blob',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`, // Attach the token for secure access
-        },
-      });
+        if (!token) {
+            setErrorMessage('You must be logged in to merge PDFs.');
+            return;
+        }
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'merged.pdf');
-      document.body.appendChild(link);
-      link.click();
+        const response = await axios.post('http://localhost:5000/api/mergePdf', formData, {
+            responseType: 'blob',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`,  // Attach the token for secure access
+            },
+        });
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'merged.pdf');
+        document.body.appendChild(link);
+        link.click();
     } catch (error) {
-      setErrorMessage('There was an error merging the PDFs. Please ensure you are logged in and try again.');
-      console.error('There was an error merging the PDFs!', error);
+        setErrorMessage('There was an error merging the PDFs. Please ensure you are logged in and try again.');
+        console.error('There was an error merging the PDFs!', error);
     }
-  };
+};
+
+
 
   return (
     <>

@@ -21,11 +21,24 @@ function Imgtodocx() {
 
         setLoading(true);
 
+        // Prepare the form data for the file
         const formData = new FormData();
         formData.append('image', file);
 
+        // Retrieve token from localStorage (or wherever it is stored)
+        const token = localStorage.getItem('token');  // Ensure this token is set when the user logs in
+
+        if (!token) {
+            setError('No token found. Please log in.');
+            setLoading(false);
+            return;
+        }
+
         try {
             const response = await axios.post('http://localhost:5000/api/imgtodocx', formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+                },
                 responseType: 'blob', // Important for handling file download
             });
 

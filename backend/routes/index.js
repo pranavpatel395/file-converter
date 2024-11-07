@@ -46,8 +46,8 @@ router.use(limiter);
 // Middleware for checking JWT token
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Extract the token from the "Authorization" header
-    
+    const token = authHeader && authHeader.split(' ')[1]; // Extract token from "Bearer <token>"
+
     if (!token) {
         return res.status(401).json({ message: 'Access denied. No token provided.' });
     }
@@ -56,10 +56,12 @@ const authenticateToken = (req, res, next) => {
         if (err) {
             return res.status(403).json({ message: 'Invalid token. Access forbidden.' });
         }
-        req.user = user; // Add user info to the request for authorization checks, if needed
-        next(); // Move to the next middleware or route handler
+        req.user = user; // Attach user info to the request
+        next(); // Proceed to the next middleware or route handler
     });
 };
+
+
 
 
 // Route protection
@@ -91,7 +93,11 @@ router.post('/upload', requireAuth, upload.single('pdf'), pdfToDocxController.pd
 router.post('/docx_to_pdf', requireAuth, upload.single('docx'), Docxtopdf.docxToPdf);
 router.post('/convert', requireAuth, upload.single('file'), excelToPdfController.convertWithLibre);
 router.post('/convert-pspdfkit', requireAuth, upload.single('file'), excelToPdfController.convertWithPspdfkit);
-router.post('/mergePdf', requireAuth, upload.array('pdfs', 2), mergePdfController.mergePdfs);
+router.post('/mergePdf', requireAuth, upload.array('pdfs', 2), mergePdfController.mergePdfs, (req, res) => {
+    // Handle successful response
+    res.status(200).json({ message: 'PDFs merged successfully' });
+});
+
 router.post('/convert-pdf-to-ppt', requireAuth, upload.single('pdfFile'), convertPdfToPptx);
 router.post('/imgtodocx', requireAuth, upload.single('image'), processImage);
 

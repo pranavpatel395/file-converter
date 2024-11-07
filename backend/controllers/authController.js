@@ -1,5 +1,6 @@
 const User = require('../models/User'); // Ensure you have this line
 const bcrypt = require('bcrypt'); // Ensure bcrypt is required at the top
+const jwt = require('jsonwebtoken'); // Import jwt at the top
 
 exports.register = async (req, res) => {
     const { username, fullname, email, password } = req.body;
@@ -22,7 +23,6 @@ exports.register = async (req, res) => {
     }
 };
 
-
 exports.login = async (req, res) => {
     const { username, password } = req.body;
 
@@ -44,10 +44,13 @@ exports.login = async (req, res) => {
             return res.status(400).json({ message: 'Invalid password' });
         }
 
-        res.status(200).json({ message: 'Login successful' });
+        // Generate JWT token after successful login
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' }); // You can adjust the expiration time as needed
+
+        // Send the token back to the client
+        res.status(200).json({ message: 'Login successful', token: token });
+
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
-
-

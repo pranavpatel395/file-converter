@@ -16,10 +16,17 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.error(err));
 
-app.use(cors());
+// Configure CORS to allow Authorization headers
+app.use(cors({
+    origin: 'http://localhost:5173', // Update this to the URL of your frontend
+    methods: 'GET,POST',
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
+console.log(path.join(__dirname, 'uploads'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use('/api', routes); // Ensure routes are correctly mounted
+app.use('/api', routes);
 
 // Catch 404 errors
 app.use((req, res, next) => {

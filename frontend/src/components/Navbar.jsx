@@ -27,7 +27,7 @@ const Navbar = () => {
     localStorage.removeItem('token'); // Remove the token from localStorage
     setIsAuthenticated(false); // Update the state to reflect logged-out status
 
-    window.location.reload();
+    window.location.reload(); 
   };
 
   // Function to close the mobile menu when a link is clicked

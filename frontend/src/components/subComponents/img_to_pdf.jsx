@@ -4,7 +4,7 @@ import axios from 'axios';
 function ImgToPdf() {
     const [images, setImages] = useState([]);
     const [pdfUrl, setPdfUrl] = useState('');
-    const [loading, setLoading] = useState(false); // Loading state
+    const [loading, setLoading] = useState(false);
     const fileInputRef = useRef(null);
 
     const handleImageChange = (e) => {
@@ -22,10 +22,20 @@ function ImgToPdf() {
             const formData = new FormData();
             images.forEach((image) => formData.append('images', image));
 
+            // Retrieve token from localStorage or sessionStorage
+            const token = localStorage.getItem('token'); // Assuming token is saved here
+
+            // Check if the token is valid
+            if (!token) {
+                alert('Please log in first.');
+                return;
+            }
+
             const response = await axios.post('http://localhost:5000/api/img_to_pdf', formData, {
                 timeout: 60000,
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${token}` // Add token here
                 }
             });
 
@@ -38,7 +48,11 @@ function ImgToPdf() {
             }
         } catch (error) {
             console.error('Error during file upload and conversion:', error.message);
-            alert('An error occurred while converting the images to PDF. Please try again.');
+            if (error.response && error.response.status === 403) {
+                alert('Unauthorized access. Please log in again.');
+            } else {
+                alert('An error occurred while converting the images to PDF. Please try again.');
+            }
         } finally {
             setLoading(false); // Stop loading
         }
@@ -87,24 +101,6 @@ function ImgToPdf() {
                         </a>
                     </div>
                 )}
-            </div>
-
-            {/* Informational Section */}
-            <div className="max-w-4xl mx-auto mt-10 p-5 bg-gray-100 rounded-lg shadow-md">
-                <h2 className="text-xl font-semibold mb-4 text-gray-800">What is an Image to PDF Converter?</h2>
-                <p className="mb-4 text-gray-700">
-                    The Image to PDF converter allows you to transform multiple image files into a single PDF document.
-                    This is perfect for creating PDF albums, sharing multiple images in a compact format, or converting scanned documents into PDFs.
-                </p>
-                <p className="mb-4 text-gray-700">
-                    Simply select the images from your device, click "Upload and Convert," and your PDF will be ready for download shortly.
-                </p>
-                <h2 className="text-xl font-semibold mb-4 text-gray-800">Tips for Successful Conversion</h2>
-                <ul className="list-disc pl-5 text-gray-700">
-                    <li className="mb-2">Ensure your images are of good quality for the best PDF output.</li>
-                    <li className="mb-2">Select images in the desired order as they will appear in the PDF.</li>
-                    <li>Check the final PDF to ensure all images are displayed correctly.</li>
-                </ul>
             </div>
         </>
     );

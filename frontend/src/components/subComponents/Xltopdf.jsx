@@ -18,12 +18,22 @@ const Xltopdf = () => {
 
     setLoading(true); // Show loading indicator
 
+    // Retrieve token from localStorage (or wherever it is stored)
+    const token = localStorage.getItem('token'); // Make sure this token is set when the user logs in
+
+    if (!token) {
+      alert('No token found. Please log in.');
+      setLoading(false);
+      return;
+    }
+
     const formData = new FormData();
     formData.append('file', file);
 
     try {
       const response = await axios.post('http://localhost:5000/api/convert', formData, {
         headers: {
+          'Authorization': `Bearer ${token}`, // Add the token to the headers
           'Content-Type': 'multipart/form-data',
         },
         responseType: 'blob', // Important for downloading the file
@@ -33,6 +43,7 @@ const Xltopdf = () => {
       setDownloadUrl(url); // Set the download URL
     } catch (error) {
       console.error('Error uploading file:', error);
+      alert('Error converting the file. Please try again.');
     } finally {
       setLoading(false); // Hide loading indicator
     }
@@ -42,7 +53,6 @@ const Xltopdf = () => {
     <>
       <div className="text-center p-5 bg-white max-w-lg mx-auto shadow-lg rounded-lg mt-10">
         <h1 className="text-3xl font-bold mb-4 text-gray-800">Excel to PDF Converter</h1>
-       
 
         <input
           type="file"

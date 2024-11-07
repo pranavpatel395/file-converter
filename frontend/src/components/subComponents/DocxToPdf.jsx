@@ -15,23 +15,34 @@ function DocxToPdf() {
             setMessage('Please select a DOCX file to upload.');
             return;
         }
-
+    
         const formData = new FormData();
         formData.append('docx', file);
-
+    
+        // Retrieve token from localStorage (or wherever it's stored)
+        const token = localStorage.getItem('token');  // Make sure the token is stored during login
+    
+        if (!token) {
+            setMessage('No token found. Please log in.');
+            return;
+        }
+    
         setLoading(true); // Start loading
         try {
             const response = await axios.post('/api/docx_to_pdf', formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Add token to the Authorization header
+                },
                 responseType: 'blob', // Important for downloading the file
             });
-
+    
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
             link.setAttribute('download', 'converted.pdf');
             document.body.appendChild(link);
             link.click();
-
+    
             setMessage('File converted successfully.');
         } catch (error) {
             console.error('Error uploading the file:', error);
@@ -40,6 +51,7 @@ function DocxToPdf() {
             setLoading(false); // Stop loading
         }
     };
+    
 
     return (
         <>

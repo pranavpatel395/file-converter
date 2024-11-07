@@ -17,11 +17,24 @@ function PptToPdf() {
 
         setLoading(true); // Start loading
 
+        // Retrieve token from localStorage (or wherever it is stored)
+        const token = localStorage.getItem('token'); // Ensure this token is set when the user logs in
+
+        if (!token) {
+            alert('No token found. Please log in.');
+            setLoading(false);
+            return;
+        }
+
         const formData = new FormData();
         formData.append('pptFile', file);
 
         try {
             const response = await axios.post('http://localhost:5000/api/ppttopdf', formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Add token to headers
+                    'Content-Type': 'multipart/form-data'
+                },
                 responseType: 'blob',
             });
 
@@ -33,6 +46,7 @@ function PptToPdf() {
             link.click();
         } catch (error) {
             console.error('There was an error converting the file!', error);
+            alert('An error occurred while converting the PPT to PDF. Please try again.');
         } finally {
             setLoading(false); // Stop loading
         }
