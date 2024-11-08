@@ -37,9 +37,17 @@ const App = () => {
             <Route path="/" element={<Home refresh={refresh} />} />
             {/* <Route path="/home" element={<Home />} /> */}
             <Route path="/File" element={<FileConverter />} />
-            <Route path="/ContactPage" element={<ContactPage />} />
+            {/* <Route path="/ContactPage" element={<ContactPage />} /> */}
             <Route path="/Edit" element={<Edit />} />
             <Route path="/Sign" element={<Sign />} />
+            <Route
+              path="/ContactPage"
+              element={
+                <ProtectedRoute>
+                  <ContactPage />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Protected Routes */}
             <Route

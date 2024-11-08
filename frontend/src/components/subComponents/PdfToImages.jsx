@@ -15,6 +15,8 @@ function PdfToImages() {
     }, [pdfFile]);
 
     const handleFileChange = (e) => {
+        // Clear previous images when a new file is selected
+        setImageUrls([]);
         setPdfFile(e.target.files[0]);
     };
 
@@ -46,6 +48,7 @@ function PdfToImages() {
                 }
             );
 
+            // Update the images list with new images returned from the backend
             if (response.data.images) {
                 setImageUrls(response.data.images.map(image => `http://localhost:5000/${image}`));
             } else {
@@ -141,12 +144,12 @@ function PdfToImages() {
                         >
                             Download All Images
                         </button>
-                        {/* <button
+                        <button
                             onClick={handleClear}
                             className="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
                         >
                             Clear
-                        </button> */}
+                        </button>
                     </div>
                 )}
             </div>

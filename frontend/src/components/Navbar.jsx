@@ -68,22 +68,22 @@ const Navbar = () => {
                         <Link to="/img_to_pdf" className="text-gray-700 hover:text-gray-900 block text-sm">
                           IMG to PDF
                         </Link>
-                        <Link to="/DocxToPdf" className="text-gray-700 hover:text-gray-900 block text-sm">
+                        <Link to="/docx_to_pdf" className="text-gray-700 hover:text-gray-900 block text-sm">
                           Word To PDF
                         </Link>
-                        <Link to="/ppt_to_pdf" className="text-gray-700 hover:text-gray-900 block text-sm">
+                        <Link to="/ppttopdf" className="text-gray-700 hover:text-gray-900 block text-sm">
                           PPT To PDF
                         </Link>
                         <Link to="/Xltopdf" className="text-gray-700 hover:text-gray-900 block text-sm">
                           Excel To PDF
                         </Link>
-                        <Link to="/PdfToImages" className="text-gray-700 hover:text-gray-900 block text-sm">
+                        <Link to="/pdf_to_images" className="text-gray-700 hover:text-gray-900 block text-sm">
                           PDF To Img
                         </Link>
                         <Link to="/Pdftodocx" className="text-gray-700 hover:text-gray-900 block text-sm">
                           PDF To Word
                         </Link>
-                        <Link to="/pdftopptx" className="text-gray-700 hover:text-gray-900 block text-sm">
+                        <Link to="/convert-pdf-to-ppt" className="text-gray-700 hover:text-gray-900 block text-sm">
                           PDF To PPT
                         </Link>
                         <Link to="/Imgtodocx" className="text-gray-700 hover:text-gray-900 block text-sm">

@@ -16,6 +16,11 @@ exports.convertPdfToImages = async (req, res) => {
         fs.mkdirSync(outputDir, { recursive: true });
     }
 
+    // Clear existing files in the output directory
+    fs.readdirSync(outputDir).forEach((file) => {
+        fs.unlinkSync(path.join(outputDir, file));
+    });
+
     const options = {
         format: 'jpeg',
         out_dir: outputDir,

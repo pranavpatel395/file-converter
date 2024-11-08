@@ -16,6 +16,7 @@ const mergePdfController = require('../controllers/mergePdf');
 const { convertPdfToPptx } = require('../controllers/pdftopptx');
 const { processImage } = require('../controllers/Imagetodocx');
 const authController = require('../controllers/authController');
+// const contactRoutes = require('../controllers/contactback');
 
 const router = express.Router();
 
@@ -100,5 +101,7 @@ router.post('/mergePdf', requireAuth, upload.array('pdfs', 2), mergePdfControlle
 
 router.post('/convert-pdf-to-ppt', requireAuth, upload.single('pdfFile'), convertPdfToPptx);
 router.post('/imgtodocx', requireAuth, upload.single('image'), processImage);
+
+// router.use('/contact', contactRoutes);
 
 module.exports = router;
