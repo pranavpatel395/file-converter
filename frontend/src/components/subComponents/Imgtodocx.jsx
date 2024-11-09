@@ -35,7 +35,7 @@ function Imgtodocx() {
         }
 
         try {
-            const response = await axios.post('http://localhost:5000/api/imgtodocx', formData, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/imgtodocx`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
                 },

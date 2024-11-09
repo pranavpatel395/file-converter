@@ -16,7 +16,6 @@ const mergePdfController = require('../controllers/mergePdf');
 const { convertPdfToPptx } = require('../controllers/pdftopptx');
 const { processImage } = require('../controllers/Imagetodocx');
 const authController = require('../controllers/authController');
-// const contactRoutes = require('../controllers/contactback');
 
 const router = express.Router();
 
@@ -33,13 +32,13 @@ const storage = multer.diskStorage({
 // Multer instance with file size limit
 const upload = multer({
     storage: storage,
-    limits: { fileSize: parseInt(process.env.MAX_FILE_SIZE, 10) * 1024 * 1024 } // 100 MB
+    limits: { fileSize: parseInt(process.env.MAX_FILE_SIZE, 10) * 1024 * 1024 } // Configured via .env
 });
 
 // Rate limiter to prevent brute-force attacks
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000, // Configured via .env
+    max: parseInt(process.env.RATE_LIMIT_MAX, 10) || 100, // Configured via .env
     message: "Too many requests from this IP, please try again after 15 minutes"
 });
 router.use(limiter);
@@ -61,9 +60,6 @@ const authenticateToken = (req, res, next) => {
         next(); // Proceed to the next middleware or route handler
     });
 };
-
-
-
 
 // Route protection
 const requireAuth = (req, res, next) => {
@@ -101,7 +97,5 @@ router.post('/mergePdf', requireAuth, upload.array('pdfs', 2), mergePdfControlle
 
 router.post('/convert-pdf-to-ppt', requireAuth, upload.single('pdfFile'), convertPdfToPptx);
 router.post('/imgtodocx', requireAuth, upload.single('image'), processImage);
-
-// router.use('/contact', contactRoutes);
 
 module.exports = router;

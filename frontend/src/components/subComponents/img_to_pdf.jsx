@@ -31,7 +31,7 @@ function ImgToPdf() {
                 return;
             }
 
-            const response = await axios.post('http://localhost:5000/api/img_to_pdf', formData, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/img_to_pdf`, formData,  {
                 timeout: 60000,
                 headers: {
                     'Content-Type': 'multipart/form-data',

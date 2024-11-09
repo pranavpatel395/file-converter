@@ -36,9 +36,9 @@ function PdfToImages() {
                 return;
             }
 
-            const response = await axios.post(
-                'http://localhost:5000/api/pdf_to_images',
-                formData,
+            //pdf_to_images
+
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/pdf_to_images`, formData, 
                 {
                     headers: { 
                         'Content-Type': 'multipart/form-data',

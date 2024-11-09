@@ -28,9 +28,9 @@ const Register = () => {
             setErrorMessage("Passwords do not match!");
             return;
         }
-
+//register
         try {
-            const response = await axios.post('http://localhost:5000/api/register', {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/register`,  {
                 username: formData.username,
                 fullname: formData.fullname,
                 email: formData.email,

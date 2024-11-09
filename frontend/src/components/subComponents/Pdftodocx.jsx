@@ -29,10 +29,10 @@ function Pdftodocx() {
             return;
         }
         
-
+        //upload
 
         try {
-            const response = await axios.post('/api/upload', formData, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/upload`, formData,  {
                 headers: {
                     'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
                 },
