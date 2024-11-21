@@ -3,6 +3,9 @@ const path = require('path');
 const libre = require('libreoffice-convert');
 const { load } = require('@pspdfkit/nodejs');
 
+// Set the path to the LibreOffice executable
+libre.ext = '/usr/bin/libreoffice';  // Update this with the correct path
+
 // Convert callback-based libre.convert to promise
 const convertLibreAsync = (inputBuffer, outputExt) => {
   return new Promise((resolve, reject) => {
