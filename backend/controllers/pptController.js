@@ -1,10 +1,12 @@
+// Set the LIBREOFFICE_EXECUTABLE environment variable
+process.env.LIBREOFFICE_EXECUTABLE = '/usr/bin/libreoffice';
+
+// Now import the required libraries
 const libre = require('libreoffice-convert');
 const fs = require('fs');
 const path = require('path');
 
-// Set the path to the LibreOffice executable
-libre.ext = '/usr/bin/libreoffice';  // Update with the correct path
-
+// Your conversion logic
 exports.convertFile = (req, res) => {
     const pptPath = req.file.path;
     const outputPath = `uploads/${path.parse(req.file.originalname).name}.pdf`;
