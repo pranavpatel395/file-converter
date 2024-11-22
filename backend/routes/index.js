@@ -11,7 +11,7 @@ const pptController = require('../controllers/pptController');
 const pdfToImageController = require('../controllers/pdfToImageController');
 const pdfToDocxController = require('../controllers/PdfToDocx');
 const Docxtopdf = require('../controllers/Docxtopdf');
-const excelToPdfController = require('../controllers/excelToPdf');
+const { excelToPdf } = require('../controllers/excelToPdf');
 const mergePdfController = require('../controllers/mergePdf');
 const { convertPdfToPptx } = require('../controllers/pdftopptx');
 const { processImage } = require('../controllers/Imagetodocx');
@@ -88,8 +88,8 @@ router.post('/pdf_to_images', requireAuth, (req, res, next) => {
 // Secure other file conversion routes with authentication
 router.post('/upload', requireAuth, upload.single('pdf'), pdfToDocxController.pdfToDocx);
 router.post('/docx_to_pdf', requireAuth, upload.single('docx'), Docxtopdf.docxToPdf);
-router.post('/Xltopdf', requireAuth, upload.single('file'), excelToPdfController.convertWithLibre);
-router.post('/convert-pspdfkit', requireAuth, upload.single('file'), excelToPdfController.convertWithPspdfkit);
+router.post('/Xltopdf',requireAuth, upload.single('file'), excelToPdf);
+// router.post('/convert-pspdfkit', requireAuth, upload.single('file'), excelToPdfController.convertWithPspdfkit);
 router.post('/mergePdf', requireAuth, upload.array('pdfs', 2), mergePdfController.mergePdfs, (req, res) => {
     // Handle successful response
     res.status(200).json({ message: 'PDFs merged successfully' });
