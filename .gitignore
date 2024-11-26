@@ -6,3 +6,5 @@
 
 # Ignore node_modules directory in the frontend directory
 /frontend/node_modules/
+
+/frontend/dist
