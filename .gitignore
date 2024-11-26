@@ -9,6 +9,6 @@
 
 /frontend/dist
 
-/frontend/.env
+.env
 
 /frontend/.gitignore
